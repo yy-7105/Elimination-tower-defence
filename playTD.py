@@ -177,6 +177,27 @@ def display_game_text(g: Game):
                                18, multiplier_loc, white, (0, 75, 100))
 
 
+def display_tower_info(t: Tower):
+    name_loc = (HEIGHT + 10, 175)
+    gen_text_window_left_align(f'{str(t)}', 30, name_loc,
+                               white, (0, 75, 100))
+
+    tw_atk_loc = (HEIGHT + 10, 210)
+    tw_range_loc = (HEIGHT + 10, 232)
+    tw_int_loc = (HEIGHT + 10, 254)
+    gen_text_window_left_align(f'ATK: {t.atk}', 20, tw_atk_loc,
+                               white, (0, 75, 100))
+    gen_text_window_left_align(f'range: {t.atk_range}', 20, tw_range_loc,
+                               white, (0, 75, 100))
+    gen_text_window_left_align(f'interval: {t.atk_interval}s', 20, tw_int_loc,
+                               white, (0, 75, 100))
+
+
+def display_game_over():
+    gen_text_window_left_align(f'You Lose', 60, (WIDTH // 2, HEIGHT // 2),
+                               black, white)
+
+
 g = Game()
 g.gen_random_enemies()  # generate for the first wave
 
@@ -188,6 +209,7 @@ running = True
 pos_selected = None
 wave_wait_time = 1000
 spawn = False
+game_over = False
 next_level = 1
 counter = WAVE_DELAY // 1000
 
@@ -249,6 +271,15 @@ while running:
 
         if event.type == QUIT:
             running = False
+
+    if pos_selected is not None:
+        tw = g.board[pos_selected[0]][pos_selected[1]]
+        if isinstance(tw, Tower):
+            display_tower_info(tw)
+
+    if g.port_hp <= 0:
+        game_over = True
+        running = False
 
     if len(g.enemy_list) == 0 and not spawn:
         if next_level != g.enemy_wave:

@@ -58,10 +58,9 @@ ENEMY_ATTR_DICT = {
     'Square': (100, 1.5)
 }
 
-
-CANNON_ATK_INT = round(FPS * 0.8)
-SNIPER_ATK_INT = round(FPS * 2)
-CRUSHER_ATK_INT = round(FPS * 1.5)
+CANNON_ATK_INT = 0.8
+SNIPER_ATK_INT = 2
+CRUSHER_ATK_INT = 1.5
 # Bullet Speed
 CANNON_BS = FPS * 0.8
 SNIPER_BS = FPS * 1.5

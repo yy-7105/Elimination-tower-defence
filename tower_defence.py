@@ -307,7 +307,7 @@ class Cannon(Tower):
         bullet = Bullet(self.pos, self.atk, CANNON_BS,
                         get_tower_color(self), self.target)
         self.bullets.add(bullet)
-        self.cool_down = CANNON_ATK_INT
+        self.cool_down = round(FPS * CANNON_ATK_INT)
 
     def draw_aim_line(self):
         if self.target:
@@ -357,7 +357,7 @@ class Sniper(Tower):
         bullet = Bullet(self.pos, atk, CANNON_BS,
                         get_tower_color(self), self.target)
         self.bullets.add(bullet)
-        self.cool_down = SNIPER_ATK_INT
+        self.cool_down = round(FPS * SNIPER_ATK_INT)
 
     def draw_aim_line(self):
         if self.target:
@@ -399,7 +399,7 @@ class Crusher(Tower):
         if attacked:
             pygame.gfxdraw.aacircle(screen, self.pos[0], self.pos[1],
                                     self.atk_range, get_tower_color(self))
-            self.cool_down = CRUSHER_ATK_INT
+            self.cool_down = round(FPS * CRUSHER_ATK_INT)
 
     def draw_aim_line(self):
         pass
