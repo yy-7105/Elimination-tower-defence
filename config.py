@@ -25,33 +25,36 @@ path_dot_size = 28
 
 
 ENEMY_SPAWN_INTERVAL = 800  # ms
-WAVE_DELAY = 10000
+WAVE_DELAY = 15000
 
 
 DEFEAT_ENEMY_SCORE = 10
-SCORE_MULTIPLIER_ADD = 0.15
-
+WAVE_CLEAR_SCORE = 60
+SCORE_MULTIPLIER_ADD = 0.12
+INIT_ENEMY_NUM = 12
 INIT_PORT_HP = 20
+INIT_TOWER_TO_PLACE = 10
+WAVE_CLEAR_TOWER_ADD = 7
 
 SHOW_AIM_LINE = 1  # if 1, show aim line
 
 TOWER_MAX_LVL = 4
 # (atk, atk_range)
 TOWER_ATTR_DICT = {
-    'Cannon1': (20, round(grid_size * 3.1)),
-    'Cannon2': (50, round(grid_size * 3.1)),
-    'Cannon3': (130, round(grid_size * 3.6)),
-    'Cannon4': (360, round(grid_size * 3.6)),
+    'Cannon1': (30, round(grid_size * 3.1)),
+    'Cannon2': (60, round(grid_size * 3.1)),
+    'Cannon3': (120, round(grid_size * 3.6)),
+    'Cannon4': (240, round(grid_size * 3.6)),
 
-    'Sniper1': (40, round(grid_size * 5.1)),
-    'Sniper2': (105, round(grid_size * 5.1)),
-    'Sniper3': (280, round(grid_size * 6.1)),
-    'Sniper4': (750, round(grid_size * 6.1)),
+    'Sniper1': (60, round(grid_size * 5.1)),
+    'Sniper2': (120, round(grid_size * 5.1)),
+    'Sniper3': (230, round(grid_size * 6.1)),
+    'Sniper4': (460, round(grid_size * 6.1)),
 
-    'Crusher1': (15, round(grid_size * 2.1)),
+    'Crusher1': (20, round(grid_size * 2.1)),
     'Crusher2': (40, round(grid_size * 2.1)),
-    'Crusher3': (100, round(grid_size * 2.6)),
-    'Crusher4': (260, round(grid_size * 2.6))
+    'Crusher3': (80, round(grid_size * 2.6)),
+    'Crusher4': (160, round(grid_size * 2.6))
 }
 
 
@@ -75,10 +78,13 @@ TOWER_ATTR_DICT = {
 
 # (hp, ms)
 ENEMY_ATTR_DICT = {
-    'Circle': (70, 80 / FPS),
-    'Square': (250, 60 / FPS),
-    'Triangle': (50, 120 / FPS)
+    'Circle': (120, 80 / FPS),
+    'Square': (280, 60 / FPS),
+    'Triangle': (90, 120 / FPS)
 }
+MAX_ENEMY_TYPE = len(ENEMY_ATTR_DICT)
+MAX_ENEMY_NUM = 60
+
 CIRCLE_COLOR = (152, 191, 100)
 SQUARE_COLOR = (252, 106, 3)
 TRIANGLE_COLOR = (255, 239, 0)

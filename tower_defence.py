@@ -462,7 +462,7 @@ class Game:
     enemy_list: pygame.sprite.Group()
     new_enemy_list: List[str]
     port_hp: int
-    score: int
+    score: float
     score_multiplier: float
     enemy_wave: int
     enemy_types: int
@@ -477,12 +477,12 @@ class Game:
         self.enemy_list = pygame.sprite.Group()
         self.new_enemy_list = []
         self.port_hp = INIT_PORT_HP
-        self.score = 0
+        self.score = 0.0
         self.score_multiplier = 1.00
         self.enemy_wave = 1
         self.enemy_types = 1
-        self.enemy_num = 10
-        self.remaining_tower_to_place = 10
+        self.enemy_num = INIT_ENEMY_NUM
+        self.remaining_tower_to_place = INIT_TOWER_TO_PLACE
         self.wave_info = {}
         self.tower_list = []
         for e in AVAIL_ENEMY_STR_LST:
@@ -610,11 +610,12 @@ class Game:
 
     def next_wave(self):
         self.enemy_wave += 1
+        self.score += WAVE_CLEAR_SCORE * self.score_multiplier
         self.score_multiplier = self.score_multiplier + SCORE_MULTIPLIER_ADD
-        self.score += 100
-        self.enemy_types = min(3, 1 + self.enemy_wave // 4)
-        self.enemy_num = min(70, 10 + self.enemy_wave // 3 * 2)
-        self.remaining_tower_to_place += 10
+        self.enemy_types = min(MAX_ENEMY_TYPE, 1 + self.enemy_wave // 4)
+        self.enemy_num = min(MAX_ENEMY_NUM,
+                             INIT_ENEMY_NUM + self.enemy_wave // 5 * 4)
+        self.remaining_tower_to_place += WAVE_CLEAR_TOWER_ADD
         self.wave_info = {}
         self.gen_random_enemies()
 
