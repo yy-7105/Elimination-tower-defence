@@ -235,6 +235,10 @@ g.gen_random_enemies()  # generate for the first wave
 # text, position
 pygame.init()
 
+pygame.display.set_caption('千万记住三消位置在最后！！！')
+programIcon = pygame.image.load('leafy-green_32x32.png')
+pygame.display.set_icon(programIcon)
+
 skip_font_size = 25
 skip_waiting_topleft = (HEIGHT + 120, 35)
 skip_waiting_size = gen_text_window_left_align('Go!', skip_font_size,
