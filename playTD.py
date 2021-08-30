@@ -1,4 +1,5 @@
 import pygame
+# import cProfile
 import pygame.gfxdraw
 from config import *
 from tower_defence import *
@@ -22,10 +23,13 @@ def gen_text_window(text, font_size, centered_pos, font_color, bg_color):
     screen.blit(text, textrect)
 
 
-def gen_text_window_left_align(text, font_size, topleft, font_color, bg_color):
+def gen_text_window_left_align(text, font_size, topleft, font_color, bg_color,
+                               textrect_info_only=False):
     font = pygame.font.SysFont('calibri', font_size)
     text = font.render(text, True, font_color, bg_color)
     textrect = text.get_rect()
+    if textrect_info_only:
+        return textrect.width, textrect.height
     textrect.topleft = topleft
     screen.blit(text, textrect)
 
@@ -53,7 +57,7 @@ def tower_options(lst, num_tower=AVAIL_SLOTS_NUM) -> List[Tower]:
 
 
 def render_board(lst: List[List[Optional[Tower]]],
-                 pos: Tuple[int, int], i: int):
+                 pos: Tuple[int, int]):
     for y in range(BOARD_SIZE):
         for x in range(BOARD_SIZE):
             bg_color = get_tower_color(lst[y][x])
@@ -62,10 +66,9 @@ def render_board(lst: List[List[Optional[Tower]]],
                                          margin + grid_size * y,
                                          grid_size - margin,
                                          grid_size - margin))
-
-            center = (margin + grid_size * x + (grid_size - margin) // 2,
-                      margin + grid_size * y + (grid_size - margin) // 2)
             if lst[y][x] is not None:
+                center = (margin + grid_size * x + (grid_size - margin) // 2,
+                          margin + grid_size * y + (grid_size - margin) // 2)
                 gen_text_window(str(lst[y][x]), tower_font_size,
                                 center, black, bg_color)
 
@@ -82,19 +85,17 @@ def render_board(lst: List[List[Optional[Tower]]],
                                      margin + grid_size * y,
                                      grid_size - margin,
                                      grid_size - margin))
-        center = (margin + grid_size * x + (grid_size - margin) // 2,
-                  margin + grid_size * y + (grid_size - margin) // 2)
 
         if lst[y][x] is not None:
+            center = (margin + grid_size * x + (grid_size - margin) // 2,
+                      margin + grid_size * y + (grid_size - margin) // 2)
             tower = lst[y][x]
             gen_text_window(str(tower), tower_font_size,
                             center, black, bg_color)
             pygame.gfxdraw.aacircle(screen, center[0], center[1],
                                     tower.atk_range, ATK_RANGE_COLOR)
-            pygame.gfxdraw.aacircle(screen, center[0], center[1],
-                                    tower.atk_range - 1, ATK_RANGE_COLOR)
-            # pygame.draw.circle(screen, azure, center,
-            #                    tower.atk_range, width=2)
+            # pygame.gfxdraw.aacircle(screen, center[0], center[1],
+            #                         tower.atk_range - 1, ATK_RANGE_COLOR)
 
 
 def get_grid(pos):
@@ -164,17 +165,34 @@ def select_slot(tower_lst: List[Tower], pos_on_lst, pos) -> Optional[Tower]:
 def display_game_text(g: Game):
     wave_loc = (HEIGHT + 10, 10)
     score_loc = (HEIGHT + 10, 70)
-    hp_loc = (HEIGHT + 188, 70)
     multiplier_loc = (HEIGHT + 10, 100)
+    hp_loc = (HEIGHT + 10, 130)
+
+    remaining_tower_num_loc = (HEIGHT + 10, slots_y - 35)
 
     gen_text_window_left_align(f'Wave {g.enemy_wave}', 30, wave_loc,
                                white, (0, 75, 100))
     gen_text_window_left_align(f'Score: {round(g.score)}', 30, score_loc,
                                white, (0, 75, 100))
-    gen_text_window_left_align(f'HP: {g.port_hp}', 30, hp_loc,
-                               lighter_green, (0, 75, 100))
     gen_text_window_left_align(f'Multiplier: {round(g.score_multiplier, 2)}',
                                18, multiplier_loc, white, (0, 75, 100))
+    gen_text_window_left_align(f'HP: {g.port_hp}', 30, hp_loc,
+                               lighter_green, (0, 75, 100))
+    gen_text_window_left_align(f'{g.remaining_tower_to_place} '
+                               f'towers can be placed', 22,
+                               remaining_tower_num_loc,
+                               white, (0, 75, 100))
+
+    wave_info_x, wave_info_y = HEIGHT + 10, 310
+    gen_text_window_left_align(f'Next wave:', 30, (wave_info_x, wave_info_y),
+                               white, (0, 75, 100))
+    wave_info_y += 30
+    for i in g.wave_info:
+        if g.wave_info[i] != 0:
+            gen_text_window_left_align(f'{str(i)}: {g.wave_info[i]}', 20,
+                                       (wave_info_x, wave_info_y),
+                                       white, (0, 75, 100))
+            wave_info_y += 20
 
 
 def display_tower_info(t: Tower):
@@ -194,14 +212,36 @@ def display_tower_info(t: Tower):
 
 
 def display_game_over():
-    gen_text_window_left_align(f'You Lose', 60, (WIDTH // 2, HEIGHT // 2),
-                               black, white)
+    gen_text_window(f'You Lose', 120, (HEIGHT // 2, HEIGHT // 2),
+                    white, black)
+
+
+def check_click_go_next_wave(pos, topleft, size, count: int) -> int:
+    if count > 0:
+        width = size[0]
+        height = size[1]
+        left = topleft[0]
+        top = topleft[1]
+        x = pos[0]
+        y = pos[1]
+        if left <= x <= left + width and top < y < top + height:
+            return 0
+
+    return count
 
 
 g = Game()
 g.gen_random_enemies()  # generate for the first wave
-
+# text, position
 pygame.init()
+
+skip_font_size = 25
+skip_waiting_topleft = (HEIGHT + 120, 35)
+skip_waiting_size = gen_text_window_left_align('Go!', skip_font_size,
+                                               skip_waiting_topleft,
+                                               white, green,
+                                               textrect_info_only=True)
+
 screen.fill((0, 75, 100))
 tower_in_slot = tower_options(AVAIL_TOWER_LST)
 
@@ -220,7 +260,7 @@ pygame.time.set_timer(NEXT_WAVE, wave_wait_time)
 
 while running:
     screen.fill((0, 75, 100))
-    render_board(g.board, pos_selected, g.port_hp)  # render the game board
+    render_board(g.board, pos_selected)  # render the game board
     display_slots(tower_in_slot)  # display towers on the slots on the right
     display_enemy_path(g.path)  # display enemy path
 
@@ -250,6 +290,10 @@ while running:
 
         if event.type == MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
+            counter = check_click_go_next_wave(pos,
+                                               skip_waiting_topleft,
+                                               skip_waiting_size,
+                                               counter)
             if pos[0] < HEIGHT - margin:  # guarantee x in g.board
                 # x <= BOARD_SIZE * grid_size - margin - 1
                 temp = get_grid(pos)
@@ -271,7 +315,7 @@ while running:
 
         if event.type == QUIT:
             running = False
-
+    # show tower info if tower on the grid
     if pos_selected is not None:
         tw = g.board[pos_selected[0]][pos_selected[1]]
         if isinstance(tw, Tower):
@@ -292,10 +336,19 @@ while running:
         gen_text_window_left_align(f'Next in: {counter}s', 20,
                                    (HEIGHT + 10, 40),
                                    white, (0, 75, 100))
+        gen_text_window_left_align('Go!', skip_font_size,
+                                   skip_waiting_topleft,
+                                   white, indigo)
 
     fps = round(1000 / fpsClock.tick(FPS))
     gen_text_window_left_align(f'fps: {fps}', 30, (HEIGHT + 185, 10),
                                white, (0, 75, 100))
+    pygame.display.update()
+
+
+while game_over:
+    display_game_over()
+    fpsClock.tick(5)
     pygame.display.update()
 
 pygame.quit()

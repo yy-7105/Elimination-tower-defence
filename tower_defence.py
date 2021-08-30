@@ -4,6 +4,7 @@ import pygame
 from pygame.math import Vector2
 import pygame.gfxdraw
 import random
+from math import sqrt
 
 
 def get_grid(pos) -> Tuple[int, int]:
@@ -53,10 +54,10 @@ class Enemy(pygame.sprite.Sprite):
         # self.image = pygame.Surface((24, 24))
         # self.image.fill(pygame.Color(green))
         # self.rect = self.image.get_rect(center=(0, (grid_size + margin) // 2))
-        self.pos = Vector2(0, (grid_size + margin) // 2)
+        self.pos = Vector2((grid_size + margin) // 2,
+                           (grid_size + margin) // 2)
         pos = round(self.pos.x), round(self.pos.y)
-        (row, col) = get_grid(pos)
-        e_path = enemy_path(board, (row, col))
+        e_path = enemy_path(board, (0, 0))
         self.path = get_coord(e_path)
         self.path_index = 0
         self.target = self.path[self.path_index]
@@ -68,6 +69,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def __str__(self):
         raise NotImplementedError
+
+    def update_target(self):
+        self.target = self.path[self.path_index]
 
     def update_path(self, board):
         pos = round(self.pos.x), round(self.pos.y)
@@ -84,10 +88,10 @@ class Enemy(pygame.sprite.Sprite):
         except ValueError:
             pass
         if distance < self.ms:
-            if self.path_index < len(self.path):
+            if self.path_index < len(self.path) - 1:
                 # print(self.path_index, len(self.path))
-                self.target = self.path[self.path_index]
                 self.path_index += 1
+                self.target = self.path[self.path_index]
             # otherwise enemy reach dest
             else:
                 self.remove = True
@@ -96,7 +100,7 @@ class Enemy(pygame.sprite.Sprite):
         # self.pos.x, self.pos.y = round(self.pos.x), round(self.pos.y)
         self.rect.center = self.pos
 
-    def lose_hp(self, i: int):
+    def lose_hp(self, i: Union[int, float]):
         self.hp -= i
         if self.hp <= 0:
             self.defeated = True
@@ -122,12 +126,13 @@ class Circle(Enemy):
         pygame.gfxdraw.aacircle(self.image,
                                 ENEMY_IMG_SIZE // 2,
                                 ENEMY_IMG_SIZE // 2,
-                                ENEMY_IMG_SIZE // 2 - 1, (0, 255, 0))
+                                ENEMY_IMG_SIZE // 2 - 1, CIRCLE_COLOR)
         pygame.gfxdraw.filled_circle(self.image,
                                      ENEMY_IMG_SIZE // 2,
                                      ENEMY_IMG_SIZE // 2,
-                                     ENEMY_IMG_SIZE // 2 - 1, (0, 255, 0))
-        self.rect = self.image.get_rect(center=(0, (grid_size + margin) // 2))
+                                     ENEMY_IMG_SIZE // 2 - 1, CIRCLE_COLOR)
+        self.rect = self.image.get_rect(center=((grid_size + margin) // 2,
+                                                (grid_size + margin) // 2))
 
     def __str__(self):
         return 'Circle'
@@ -138,11 +143,34 @@ class Square(Enemy):
     def __init__(self, hp, ms, board):
         super().__init__(hp, ms, board)
         self.image = pygame.Surface((ENEMY_IMG_SIZE, ENEMY_IMG_SIZE))
-        self.image.fill(pygame.Color(green))
-        self.rect = self.image.get_rect(center=(0, (grid_size + margin) // 2))
+        self.image.fill(pygame.Color(SQUARE_COLOR))
+        self.rect = self.image.get_rect(center=((grid_size + margin) // 2,
+                                                (grid_size + margin) // 2))
 
     def __str__(self):
         return 'Square'
+
+
+class Triangle(Enemy):
+
+    def __init__(self, hp, ms, board):
+        super().__init__(hp, ms, board)
+        self.image = pygame.Surface((ENEMY_IMG_SIZE, ENEMY_IMG_SIZE),
+                                    pygame.SRCALPHA)
+        bot = round(ENEMY_IMG_SIZE / 2 * sqrt(3))
+        pygame.gfxdraw.aatrigon(self.image,
+                                ENEMY_IMG_SIZE // 2, 0,
+                                0, bot,
+                                ENEMY_IMG_SIZE, bot, TRIANGLE_COLOR)
+        pygame.gfxdraw.filled_trigon(self.image,
+                                     ENEMY_IMG_SIZE // 2, 0,
+                                     0, bot,
+                                     ENEMY_IMG_SIZE, bot, TRIANGLE_COLOR)
+        self.rect = self.image.get_rect(center=((grid_size + margin) // 2,
+                                                (grid_size + margin) // 2))
+
+    def __str__(self):
+        return 'Triangle'
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -270,6 +298,13 @@ class Tower:
         if self.cool_down > 0:
             self.cool_down -= 1
 
+    def target_out_of_range(self):
+        if self.target:
+            heading = self.target.pos - Vector2(self.pos)
+            distance = heading.length()  # Distance to the target.
+            if distance > self.atk_range:
+                self.target = None
+
 
 class Cannon(Tower):
 
@@ -315,7 +350,7 @@ class Cannon(Tower):
                 return
             pygame.gfxdraw.line(screen, self.pos[0], self.pos[1],
                                 round(self.target.pos[0]),
-                                round(self.target.pos[1]), red)
+                                round(self.target.pos[1]), AIMING_LINE_COLOR)
 
 
 class Sniper(Tower):
@@ -354,7 +389,7 @@ class Sniper(Tower):
         atk = self.atk
         if isinstance(self.target, Square):
             atk = self.atk * 1.5
-        bullet = Bullet(self.pos, atk, CANNON_BS,
+        bullet = Bullet(self.pos, atk, SNIPER_BS,
                         get_tower_color(self), self.target)
         self.bullets.add(bullet)
         self.cool_down = round(FPS * SNIPER_ATK_INT)
@@ -365,7 +400,7 @@ class Sniper(Tower):
                 return
             pygame.gfxdraw.line(screen, self.pos[0], self.pos[1],
                                 round(self.target.pos[0]),
-                                round(self.target.pos[1]), red)
+                                round(self.target.pos[1]), AIMING_LINE_COLOR)
 
 
 class Crusher(Tower):
@@ -392,9 +427,10 @@ class Crusher(Tower):
                 distance = heading.length()
                 if distance <= self.atk_range:
                     attacked = True
-                    e.hp -= self.atk
-                    if e.hp <= 0:
-                        e.defeated = True
+                    if isinstance(e, Triangle):
+                        e.lose_hp(self.atk * 1.5)
+                    else:
+                        e.lose_hp(self.atk)
 
         if attacked:
             pygame.gfxdraw.aacircle(screen, self.pos[0], self.pos[1],
@@ -404,14 +440,13 @@ class Crusher(Tower):
     def draw_aim_line(self):
         pass
 
+    def target_out_of_range(self):
+        pass
+
 
 AVAIL_TOWER_LST = [Cannon, Sniper, Crusher]
 AVAIL_SLOTS_NUM = 2
-AVAIL_ENEMY_LST = [Circle, Square]
-ENEMY_STR_DICT = {
-    Circle: 'Circle',
-    Square: 'Square'
-}
+AVAIL_ENEMY_STR_LST = ['Circle', 'Square', 'Triangle']
 
 
 class Game:
@@ -432,7 +467,9 @@ class Game:
     enemy_wave: int
     enemy_types: int
     enemy_num: int
+    remaining_tower_to_place: int
     wave_info: Dict[str, int]
+    tower_list: List[Tower]
 
     def __init__(self):
         self.board = list_deep_copy()
@@ -445,8 +482,10 @@ class Game:
         self.enemy_wave = 1
         self.enemy_types = 1
         self.enemy_num = 10
+        self.remaining_tower_to_place = 10
         self.wave_info = {}
-        for e in ENEMY_STR_DICT.values():
+        self.tower_list = []
+        for e in AVAIL_ENEMY_STR_LST:
             self.wave_info[e] = 0
 
     def __str__(self):
@@ -461,44 +500,58 @@ class Game:
             s += row_str + '\n'
         return s
 
-    def update_all_towers(self):
-        """Enemy list will be updated first"""
+    def refresh_tower_list(self):
+        """Refresh tower list whenever merge happens"""
+        lst = []
         for row in self.board:
             for tw in row:
                 if isinstance(tw, Tower):
-                    tw.attack_enemy(self.enemy_list)
-                    tw.update_bullets()
-                    tw.on_cool_down()
+                    lst.append(tw)
+        self.tower_list = lst
+
+    def update_all_towers(self):
+        """Enemy list will be updated first"""
+        for tw in self.tower_list:
+            tw.target_out_of_range()
+            tw.attack_enemy(self.enemy_list)
+            tw.update_bullets()
+            tw.on_cool_down()
 
     def display_aim_line_pygame(self, show_aim_line=SHOW_AIM_LINE):
         if show_aim_line:
-            for row in self.board:
-                for tw in row:
-                    if isinstance(tw, Tower):
-                        tw.draw_aim_line()
+            for tw in self.tower_list:
+                tw.draw_aim_line()
 
     def gen_random_enemies(self):
-        if self.enemy_wave < 5:
+        if self.enemy_wave < 3:
             self.wave_info['Circle'] = self.enemy_num
             self.new_enemy_list = \
                 ['Circle' for _ in range(self.enemy_num)]
+        elif self.enemy_types == 1:  # wave >= 3
+            enemy_lst_copy = AVAIL_ENEMY_STR_LST[:]
+            random_type = random.choice(enemy_lst_copy)  # str
+            self.wave_info[random_type] = self.enemy_num
+            self.new_enemy_list = [random_type for _ in range(self.enemy_num)]
+        else:  # wave >= 3 and enemy type > 1
+            enemy_lst_copy = AVAIL_ENEMY_STR_LST[:]
+            enemies_gen = 0
+            sep_lst = []
+            for _ in range(self.enemy_types - 1):
+                group_num = random.randint(1,
+                                           (self.enemy_num - enemies_gen) // 2)
+                sep_lst.append(group_num)
+                enemies_gen += group_num
 
-        # elif self.enemy_wave < 16:
-        else:
-            square_num = self.enemy_num // 2
-            self.wave_info['Square'] = square_num
-            rest = self.enemy_num - square_num
-            temp = ['Square' for _ in range(square_num)]
-            lst_no_square = AVAIL_ENEMY_LST[:]
-            lst_no_square.remove(Square)
-            random_type = random.choice(lst_no_square)
-            type_str = ENEMY_STR_DICT[random_type]
-            self.wave_info[type_str] = rest
-            self.new_enemy_list = \
-                temp + [type_str for _ in range(rest)]
+            sep_lst.append(self.enemy_num - enemies_gen)
+
+            for i in range(self.enemy_types):
+                random_type = random.choice(enemy_lst_copy)
+                enemy_lst_copy.remove(random_type)
+                self.new_enemy_list += [random_type for _ in range(sep_lst[i])]
+                self.wave_info[random_type] = sep_lst[i]
 
     def spawn_time_based(self) -> bool:
-        try:
+        if self.new_enemy_list:
             type_str = self.new_enemy_list.pop()
             hp = round(ENEMY_ATTR_DICT[type_str][0] * self.score_multiplier, 1)
             ms = ENEMY_ATTR_DICT[type_str][1]
@@ -508,9 +561,12 @@ class Game:
             if type_str == 'Square':
                 new_enemy = Square(hp, ms, self.board)
                 self.add_enemy(new_enemy)
+            if type_str == 'Triangle':
+                new_enemy = Triangle(hp, ms, self.board)
+                self.add_enemy(new_enemy)
             return True
-        except IndexError:
-            return False
+
+        return False
 
     def add_enemy(self, e: Enemy):
         self.enemy_list.add(e)
@@ -554,10 +610,11 @@ class Game:
 
     def next_wave(self):
         self.enemy_wave += 1
-        self.score_multiplier = self.score_multiplier + 0.1
+        self.score_multiplier = self.score_multiplier + SCORE_MULTIPLIER_ADD
         self.score += 100
-        self.enemy_types = min(2, 1 + self.enemy_wave // 5)
-        self.enemy_num = min(40, 10 + self.enemy_wave // 5 * 2)
+        self.enemy_types = min(3, 1 + self.enemy_wave // 4)
+        self.enemy_num = min(70, 10 + self.enemy_wave // 3 * 2)
+        self.remaining_tower_to_place += 10
         self.wave_info = {}
         self.gen_random_enemies()
 
@@ -565,6 +622,7 @@ class Game:
         for e in self.enemy_list:
             e.path_index = 1
             e.update_path(self.board)
+            e.update_target()
 
     def add_score(self, s: int):
         self.score += s
@@ -592,6 +650,8 @@ class Game:
         path
         -
         """
+        if self.remaining_tower_to_place <= 0:
+            return False
         if pos == (0, 0) or pos == (BOARD_SIZE - 1, BOARD_SIZE - 1):
             return False
         if isinstance(self.board[pos[0]][pos[1]], Tower):
@@ -610,6 +670,8 @@ class Game:
                 # Mutate self.board
                 self.board = board_copy
                 tower.pos = get_coord([pos])[0]
+                self.refresh_tower_list()
+                self.remaining_tower_to_place -= 1
                 return True
 
         # can not be merged
@@ -618,6 +680,8 @@ class Game:
         if pos not in self.path:
             self.board[pos[0]][pos[1]] = tower
             tower.pos = get_coord([pos])[0]
+            self.tower_list.append(tower)
+            self.remaining_tower_to_place -= 1
             return True
 
         # need a new copy in case mutated
@@ -628,6 +692,8 @@ class Game:
             self.path = path
             self.board[pos[0]][pos[1]] = tower
             tower.pos = get_coord([pos])[0]
+            self.tower_list.append(tower)
+            self.remaining_tower_to_place -= 1
             return True
         else:
             return False
@@ -663,6 +729,31 @@ def get_tower_color(tower: Optional[Tower]) -> Tuple[int, int, int]:
 
 
 def enemy_path(board, pos=(0, 0), visited=None) -> List[Tuple[int, int]]:
+    """Find an enemy path starting at pos using BFS method
+    """
+    if visited is None:
+        visited = set()
+    if pos == (BOARD_SIZE - 1, BOARD_SIZE - 1):
+        return [pos]
+
+    queue = []
+    queue.append([pos])
+    visited.add(pos)
+    while queue:  # queue not empty
+        path = queue.pop(0)
+        last_pos = path[-1]
+        for ext in next_move_extensions(last_pos, board):
+            # print(path, last_pos, ext)
+            if ext == (BOARD_SIZE - 1, BOARD_SIZE - 1):
+                return path + [ext]
+            if ext not in visited:
+                queue.append(path + [ext])
+                visited.add(ext)
+
+    return []
+
+
+def enemy_path_dfs(board, pos=(0, 0), visited=None) -> List[Tuple[int, int]]:
     """Find an enemy path using DFS method
     """
     if visited is None:
@@ -677,7 +768,7 @@ def enemy_path(board, pos=(0, 0), visited=None) -> List[Tuple[int, int]]:
     # print(pos, extensions, visited)
     for ext in extensions:  # ext is a position
         if ext not in visited:
-            temp = enemy_path(board, ext, visited)
+            temp = enemy_path_dfs(board, ext, visited)
             if temp:
                 return [pos] + temp
             visited.add(ext)
