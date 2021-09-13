@@ -1,5 +1,5 @@
 import pygame
-# import cProfile
+import cProfile
 import pygame.gfxdraw
 from config import *
 from tower_defence import *
@@ -255,7 +255,7 @@ wave_wait_time = 1000
 spawn = False
 game_over = False
 next_level = 1
-counter = WAVE_DELAY // 1000
+counter = FIRST_WAVE_DELAY // 1000
 
 SPAWN_ENEMY = pygame.USEREVENT + 1
 NEXT_WAVE = pygame.USEREVENT + 2

@@ -25,16 +25,17 @@ path_dot_size = 28
 
 
 ENEMY_SPAWN_INTERVAL = 800  # ms
+FIRST_WAVE_DELAY = 30000
 WAVE_DELAY = 15000
 
 
 DEFEAT_ENEMY_SCORE = 10
 WAVE_CLEAR_SCORE = 60
-SCORE_MULTIPLIER_ADD = 0.2
+SCORE_MULTIPLIER_ADD = 0.25
 INIT_ENEMY_NUM = 12
 INIT_PORT_HP = 20
-INIT_TOWER_TO_PLACE = 10
-WAVE_CLEAR_TOWER_ADD = 8
+INIT_TOWER_TO_PLACE = 15
+WAVE_CLEAR_TOWER_ADD = 6
 
 SHOW_AIM_LINE = 1  # if 1, show aim line
 
@@ -78,9 +79,9 @@ TOWER_ATTR_DICT = {
 
 # (hp, ms)
 ENEMY_ATTR_DICT = {
-    'Circle': (100, 80 / FPS),
-    'Square': (240, 60 / FPS),
-    'Triangle': (70, 120 / FPS)
+    'Circle': (120, 80 / FPS),
+    'Square': (250, 60 / FPS),
+    'Triangle': (80, 120 / FPS)
 }
 MAX_ENEMY_TYPE = len(ENEMY_ATTR_DICT)
 MAX_ENEMY_NUM = 60
