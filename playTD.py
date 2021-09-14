@@ -1,12 +1,8 @@
 import pygame
-import cProfile
 import pygame.gfxdraw
 from config import *
 from tower_defence import *
-from pygame.locals import (MOUSEBUTTONUP,
-                           MOUSEBUTTONDOWN,
-                           KEYDOWN,
-                           K_r,
+from pygame.locals import (MOUSEBUTTONDOWN,
                            QUIT)
 from typing import List, Tuple, Optional
 import random
