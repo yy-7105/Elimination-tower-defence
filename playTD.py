@@ -7,6 +7,7 @@ from pygame.locals import (MOUSEBUTTONDOWN,
 from typing import List, Tuple, Optional
 import random
 
+
 # don't change, haven't updated yet
 DEVELOPER_MODE = 0  # if developer_mode is 1, all towers spawns are snipers
 
