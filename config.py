@@ -34,7 +34,7 @@ WAVE_CLEAR_SCORE = 60
 SCORE_MULTIPLIER_ADD = 0.25
 INIT_ENEMY_NUM = 12
 INIT_PORT_HP = 20
-INIT_TOWER_TO_PLACE = 15
+INIT_TOWER_TO_PLACE = 12
 WAVE_CLEAR_TOWER_ADD = 6
 
 SHOW_AIM_LINE = 1  # if 1, show aim line
@@ -79,9 +79,9 @@ TOWER_ATTR_DICT = {
 
 # (hp, ms)
 ENEMY_ATTR_DICT = {
-    'Circle': (120, 80 / FPS),
-    'Square': (250, 60 / FPS),
-    'Triangle': (80, 120 / FPS)
+    'Circle': (130, 80 / FPS),
+    'Square': (280, 60 / FPS),
+    'Triangle': (90, 120 / FPS)
 }
 MAX_ENEMY_TYPE = len(ENEMY_ATTR_DICT)
 MAX_ENEMY_NUM = 60
