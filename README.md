@@ -5,9 +5,9 @@ Canon deal average damage and has a high attack speed and an average attack rang
 Sniper deals high damage and deal increasing damage to Square; its attack range is larger but its reloading speed is low; 
 Crusher deals low to average damage in a small attack range (deael 50% more damage to triangle), but it smashes all enemies in his attack range!
 - There are two types of enemies, Circle, Square and Triangle:
-Circle moves at a medium speed and has medium hp.
-Square moves slow but has high hp. Meanwhile it takes increased damage from Sniper tower.
-Triangle moves fast but has low hp, and takes increased damage from Crusher.
+  - Circle moves at a medium speed and has medium hp.
+  - Square moves slow but has high hp. Meanwhile it takes increased damage from Sniper tower.
+  - Triangle moves fast but has low hp, and takes increased damage from Crusher.
 - Player can select and deselect a gird. When a grid is selected, if a tower is placed on the grid, the player sees the information of the tower (attack range, level, attack damage, attack interval); and if not, player could choose and place a tower from the buttom right corner of the screen.
 - When three towers are placed in a sequence of 3 (either in row or in column), 3 towers merge into one higher level tower at the position player places the tower.
 - Eliminate an enemy earns player 10 points times the score multiplier.
