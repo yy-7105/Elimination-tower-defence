@@ -43,14 +43,14 @@ TOWER_MAX_LVL = 4
 # (atk, atk_range)
 TOWER_ATTR_DICT = {
     'Cannon1': (35, round(grid_size * 3.1)),
-    'Cannon2': (81, round(grid_size * 3.1)),
-    'Cannon3': (186, round(grid_size * 3.6)),
-    'Cannon4': (428, round(grid_size * 3.6)),
+    'Cannon2': (82, round(grid_size * 3.1)),
+    'Cannon3': (193, round(grid_size * 3.6)),
+    'Cannon4': (454, round(grid_size * 3.6)),
 
     'Sniper1': (60, round(grid_size * 5.1)),
-    'Sniper2': (138, round(grid_size * 5.1)),
-    'Sniper3': (300, round(grid_size * 6.1)),
-    'Sniper4': (650, round(grid_size * 6.1)),
+    'Sniper2': (141, round(grid_size * 5.1)),
+    'Sniper3': (310, round(grid_size * 6.1)),
+    'Sniper4': (725, round(grid_size * 6.1)),
 
     'Crusher1': (20, round(grid_size * 2.1)),
     'Crusher2': (48, round(grid_size * 2.1)),
@@ -80,7 +80,7 @@ TOWER_ATTR_DICT = {
 # (hp, ms)
 ENEMY_ATTR_DICT = {
     'Circle': (130, 80 / FPS),
-    'Square': (280, 60 / FPS),
+    'Square': (280, 50 / FPS),
     'Triangle': (90, 120 / FPS)
 }
 MAX_ENEMY_TYPE = len(ENEMY_ATTR_DICT)
@@ -90,11 +90,11 @@ CIRCLE_COLOR = (152, 191, 100)
 SQUARE_COLOR = (252, 106, 3)
 TRIANGLE_COLOR = (255, 239, 0)
 
-CANNON_ATK_INT = 0.8
+CANNON_ATK_INT = 1
 SNIPER_ATK_INT = 2
 CRUSHER_ATK_INT = 1.5
 # Bullet Speed
-CANNON_BS = 420 / FPS
+CANNON_BS = 400 / FPS
 SNIPER_BS = 800 / FPS
 
 
