@@ -34,8 +34,8 @@ WAVE_CLEAR_SCORE = 60
 SCORE_MULTIPLIER_ADD = 0.25
 INIT_ENEMY_NUM = 12
 INIT_PORT_HP = 20
-INIT_TOWER_TO_PLACE = 12
-WAVE_CLEAR_TOWER_ADD = 6
+INIT_TOWER_TO_PLACE = 15
+WAVE_CLEAR_TOWER_ADD = 7
 
 SHOW_AIM_LINE = 1  # if 1, show aim line
 
@@ -47,15 +47,15 @@ TOWER_ATTR_DICT = {
     'Cannon3': (193, round(grid_size * 3.6)),
     'Cannon4': (454, round(grid_size * 3.6)),
 
-    'Sniper1': (60, round(grid_size * 5.1)),
-    'Sniper2': (141, round(grid_size * 5.1)),
-    'Sniper3': (310, round(grid_size * 6.1)),
-    'Sniper4': (725, round(grid_size * 6.1)),
+    'Sniper1': (70, round(grid_size * 5.1)),
+    'Sniper2': (164, round(grid_size * 5.1)),
+    'Sniper3': (377, round(grid_size * 6.1)),
+    'Sniper4': (875, round(grid_size * 6.1)),
 
-    'Crusher1': (20, round(grid_size * 2.1)),
-    'Crusher2': (48, round(grid_size * 2.1)),
-    'Crusher3': (115, round(grid_size * 2.1)),
-    'Crusher4': (276, round(grid_size * 2.1))
+    'Crusher1': (18, round(grid_size * 2.1)),
+    'Crusher2': (43, round(grid_size * 2.1)),
+    'Crusher3': (108, round(grid_size * 2.1)),
+    'Crusher4': (260, round(grid_size * 2.1))
 }
 
 
@@ -79,9 +79,9 @@ TOWER_ATTR_DICT = {
 
 # (hp, ms)
 ENEMY_ATTR_DICT = {
-    'Circle': (130, 80 / FPS),
-    'Square': (280, 50 / FPS),
-    'Triangle': (90, 120 / FPS)
+    'Circle': (170, 80 / FPS),
+    'Square': (310, 50 / FPS),
+    'Triangle': (112, 120 / FPS)
 }
 MAX_ENEMY_TYPE = len(ENEMY_ATTR_DICT)
 MAX_ENEMY_NUM = 60
@@ -91,8 +91,8 @@ SQUARE_COLOR = (252, 106, 3)
 TRIANGLE_COLOR = (255, 239, 0)
 
 CANNON_ATK_INT = 1
-SNIPER_ATK_INT = 2
-CRUSHER_ATK_INT = 1.5
+SNIPER_ATK_INT = 2.5
+CRUSHER_ATK_INT = 1.2
 # Bullet Speed
 CANNON_BS = 400 / FPS
 SNIPER_BS = 800 / FPS
