@@ -1,5 +1,5 @@
 # Elimination-tower-defence
-## Rules:
+## Rules
 - There are three types of tower, Cannon, Sniper, and Crusher: 
 Canon deal average damage and has a high attack speed and an average attack range; 
 Sniper deals high damage and deal increasing damage to Square; its attack range is larger but its reloading speed is low; 
@@ -14,12 +14,13 @@ Triangle moves fast but has low hp, and takes increased damage from Crusher.
 - Player has 15 seconds to place tower after a wave of enemy is cleared. One can also click the "GO!" button to skip the waiting time.
 - Survive as long as possible!
 
-## Features:
+## Features
 - BFS and DFS algorithm for enemies' path
 - Combine tower defence game with elimination game
 - Open for adding new types of enemies and towers
 
-August 29, 2021 update:
+## Update(s)
+August 29, 2021
 - Calculating enemy path using BFS algorithm
 - Lower FPS
 - Add new enemy: Triangle
