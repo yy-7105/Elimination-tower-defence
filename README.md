@@ -11,13 +11,13 @@ Triangle moves fast but has low hp, and takes increased damage from Crusher.
 - Player can select and deselect a gird. When a grid is selected, if a tower is placed on the grid, the player sees the information of the tower (attack range, level, attack damage, attack interval); and if not, player could choose and place a tower from the buttom right corner of the screen.
 - When three towers are placed in a sequence of 3 (either in row or in column), 3 towers merge into one higher level tower at the position player places the tower.
 - Eliminate an enemy earns player 10 points times the score multiplier.
-- Player has 15 seconds to place tower after a wave of enemy is cleared
+- Player has 15 seconds to place tower after a wave of enemy is cleared. One can also click the "GO!" button to skip the waiting time.
 - Survive as long as possible!
 
-Defects:
-- Haven't add images yet
-- Need more tower types and enemy types
-- Need more tests on current tower and enemy attributes
+Features:
+- BFS and DFS algorithm for enemies' path
+- Combine tower defence game with elimination game
+- Open for adding new types of enemies and towers
 
 August 29, 2021 update:
 - Calculating using BFS
