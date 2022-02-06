@@ -1,6 +1,6 @@
 # Elimination-tower-defence
 ## Rules
-- There are three types of tower, Cannon, Sniper, and Crusher: 
+- There are three types of towers, Cannon, Sniper, and Crusher: 
   - Canon deal average damage and has a high attack speed and an average attack range; 
   - Sniper deals high damage and deal increasing damage to Square; its attack range is wider but its reloading slowly; 
   - Crusher deals low to average damage in a small attack range (deal 50% more damage to triangle), but it smashes all enemies in his attack range!
@@ -21,8 +21,8 @@ August 29, 2021
 - Lower FPS
 - Add new enemy: Triangle
 - Limit max number of towers that can be built each wave (can be added up)
-- Show enemies info in the next wave on the right
+- Show info of enemies in the next wave on the right
 - Show selected tower's attributes
 - Add option to skip to next wave after current waves cleared
-- Adjusted towers and enemies' attributes
-- Bugs fixed
+- Adjust towers and enemies' attributes
+- Fix bugs
