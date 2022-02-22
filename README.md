@@ -1,4 +1,4 @@
-# Elimination-tower-defence
+# Merge-tower-defence
 ## Rules
 - There are three types of towers, Cannon, Sniper, and Crusher: 
   - Canon deal average damage and has a high attack speed and an average attack range; 
