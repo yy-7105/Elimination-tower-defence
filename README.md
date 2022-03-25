@@ -12,8 +12,7 @@
 
 ## Features
 - BFS and DFS algorithm for enemies' path
-- Combine tower defence game with elimination game
-- Open for adding new types of enemies and towers
+- Combine tower defence game with candy pop
 
 ## Update(s)
 August 29, 2021
