@@ -5,9 +5,9 @@
   - Sniper deals high damage and deal increasing damage to Square; its attack range is wider but its reloading slowly; 
   - Crusher deals low to average damage in a small attack range (deal 50% more damage to triangle), but it smashes all enemies in his attack range!
 - Player can select and deselect a gird. When a grid is selected, if a tower is placed on the grid, the player sees the information of the tower (attack range, level, attack damage, attack interval); and if not, player could choose and place a tower from the buttom right corner of the screen.
-- When three towers are placed in a sequence of 3 (either in row or in column), 3 towers merge into one higher level tower at the position player places the tower.
+- When three towers are placed in a row (or column), they will be merged into one higher level tower at the latest position where player places the tower.
 - Eliminate an enemy earns player 10 points times the score multiplier.
-- Player has 15 seconds to place tower after a wave of enemy is cleared. One can also click the "GO!" button to skip the waiting time.
+- Player has 15 seconds to place tower after a wave of enemy is cleared. One can also click the "GO!" button at top right to skip the waiting time.
 - Survive as long as possible!
 
 ## Features
